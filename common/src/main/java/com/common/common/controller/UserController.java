@@ -25,7 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
   @Autowired
   private UserMapper userMapper;
-  //kafka分支操作
+
+  //mybatisplus分支操作
   @RequestMapping("/select")
   public List<User>  testSelect() {
     System.out.println(("----- selectAll method test ------"));
