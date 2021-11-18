@@ -26,7 +26,7 @@ public class UserController {
   @Autowired
   private UserMapper userMapper;
 
-  //mybatisplus分支操作
+  //rocketmq分支操作
   @RequestMapping("/select")
   public List<User>  testSelect() {
     System.out.println(("----- selectAll method test ------"));
