@@ -29,4 +29,16 @@ public class SendController {
     producer.send();
     return "{\"code\":0}";
   }
+  @RequestMapping(value = "/send1")
+  public String send1() {
+    producer.send1();
+    return "{\"code\":0}";
+  }
+  //https://blog.csdn.net/yuanlong122716/article/details/105160545/
+  //发送地址
+  @RequestMapping(value = "/send2")
+  public String send2() {
+    producer.send2();
+    return "{\"code\":0}";
+  }
 }

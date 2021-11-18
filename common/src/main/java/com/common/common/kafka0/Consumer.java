@@ -36,4 +36,34 @@ public class Consumer {
     }
 
   }
+
+  @KafkaListener(topics = {"test1"})
+  public void listen1(ConsumerRecord<?, ?> record) {
+
+    Optional<?> kafkaMessage = Optional.ofNullable(record.value());
+
+    if (kafkaMessage.isPresent()) {
+
+      Object message = kafkaMessage.get();
+      System.out.println("consumer test1接收到的消息---->" + record);
+      System.out.println("consumer test1接收到的消息---->" + message);
+
+    }
+
+  }
+
+  @KafkaListener(topics = {"test2"})
+  public void listen2(ConsumerRecord<?, ?> record) {
+
+    Optional<?> kafkaMessage = Optional.ofNullable(record.value());
+
+    if (kafkaMessage.isPresent()) {
+
+      Object message = kafkaMessage.get();
+      System.out.println("consumer test2接收到的消息---->" + record);
+      System.out.println("consumer test2接收到的消息---->" + message);
+
+    }
+
+  }
 }
