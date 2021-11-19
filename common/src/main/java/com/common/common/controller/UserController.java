@@ -1,5 +1,7 @@
 package com.common.common.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.common.common.entity.User;
 import com.common.common.mapper.UserMapper;
 import java.util.List;
@@ -35,4 +37,45 @@ public class UserController {
     userList.forEach(System.out::println);
     return userList;
   }
+
+  @RequestMapping("/insert")
+  public void insert() {
+    System.out.println(("----- selectAll method test ------"));
+    User user = new User();
+    user.setId(44L);
+    user.setAge(1);
+    user.setEmail("zhangqinag");
+    user.setName("zhangqiang");
+    int insert = userMapper.insert(user);
+    System.out.println(insert);
+  }
+  @RequestMapping("/update")
+  public void update() {
+    System.out.println(("----- selectAll method test ------"));
+    User user = new User();
+    user.setId(44L);
+    user.setAge(555555);
+//    user.setEmail("zhangqinag");
+//    user.setName("zhangqiang");
+    int insert = userMapper.updateById(user);
+    System.out.println(insert);
+  }
+  @RequestMapping("/delete")
+  public void delete() {
+    System.out.println(("----- selectAll method test ------"));
+    User user = new User();
+    user.setId(44L);
+//    user.setAge(555555);
+//    user.setEmail("zhangqinag");
+//    user.setName("zhangqiang");
+    int insert = userMapper.deleteById(user);
+    System.out.println(insert);
+  }
+  @RequestMapping("/selectpage")
+  public  Page<User> selectpage() {
+    Page<User> userPage = userMapper.selectPage(new Page<>(2, 5), new QueryWrapper<>());
+    System.out.println(userPage);
+    return userPage;
+  }
+
 }
