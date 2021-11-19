@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.common.common.entity.User;
 import com.common.common.mapper.UserMapper;
+import com.sun.javafx.collections.MappingChange.Map;
 import java.util.List;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,12 +27,13 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class UserController {
+
   @Autowired
   private UserMapper userMapper;
 
   //mybatisplus分支操作
   @RequestMapping("/select")
-  public List<User>  testSelect() {
+  public List<User> testSelect() {
     System.out.println(("----- selectAll method test ------"));
     List<User> userList = userMapper.selectList(null);
 //    Assert.assertEquals(5, userList.size());
@@ -49,6 +52,7 @@ public class UserController {
     int insert = userMapper.insert(user);
     System.out.println(insert);
   }
+
   @RequestMapping("/update")
   public void update() {
     System.out.println(("----- selectAll method test ------"));
@@ -60,6 +64,7 @@ public class UserController {
     int insert = userMapper.updateById(user);
     System.out.println(insert);
   }
+
   @RequestMapping("/delete")
   public void delete() {
     System.out.println(("----- selectAll method test ------"));
@@ -71,11 +76,25 @@ public class UserController {
     int insert = userMapper.deleteById(user);
     System.out.println(insert);
   }
+
   @RequestMapping("/selectpage")
-  public  Page<User> selectpage() {
+  public Page<User> selectpage() {
     Page<User> userPage = userMapper.selectPage(new Page<>(2, 5), new QueryWrapper<>());
     System.out.println(userPage);
     return userPage;
   }
 
+  @RequestMapping("/getAll")
+  public List getAll() {
+    List<User> all = userMapper.getAll();
+    System.out.println(all);
+    return all;
+  }
+
+  @RequestMapping("/getAllMap")
+  public List getAllMap() {
+    List  allMap = userMapper.getAllMap();
+    System.out.println(allMap);
+    return allMap;
+  }
 }
