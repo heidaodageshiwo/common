@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.common.common.entity.User;
 import com.common.common.mapper.UserMapper;
+import com.common.common.service.UserService;
 import com.sun.javafx.collections.MappingChange.Map;
 import java.util.List;
 import org.apache.ibatis.annotations.Select;
@@ -30,6 +31,9 @@ public class UserController {
 
   @Autowired
   private UserMapper userMapper;
+  @Autowired
+  private UserService userService;
+
 
   //mybatisplus分支操作
   @RequestMapping("/select")
@@ -96,5 +100,13 @@ public class UserController {
     List  allMap = userMapper.getAllMap();
     System.out.println(allMap);
     return allMap;
+  }
+
+
+  @RequestMapping("/selectimpl")
+  public List<User> selectimpl() {
+    List<User> userList = userService.list();
+    userList.forEach(System.out::println);
+    return userList;
   }
 }
