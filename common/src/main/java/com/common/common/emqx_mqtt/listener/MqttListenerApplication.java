@@ -59,6 +59,12 @@ public class MqttListenerApplication implements ApplicationListener<ApplicationR
         .connect(MqttCommon.tcpUrl, MqttCommon.pre + UUID.randomUUID().toString().replace("-", ""));
     connect6.setCallback(new SampleClientDevopsCmdRes());
     connect6.subscribe(MqttCommon.devopscmdResUrl);
+
+
+    MqttClient connect8 = MqttClientService
+        .connect(MqttCommon.tcpUrl, MqttCommon.pre + UUID.randomUUID().toString().replace("-", ""));
+    connect8.setCallback(new ZhangqiangTestUrl());
+    connect8.subscribe(MqttCommon.zhangqiangTestUrl);
   }
 
 }

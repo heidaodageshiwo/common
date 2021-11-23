@@ -84,6 +84,7 @@ public class MqttCommon {
   public static String commandUrl = deviceURL + "cipher/command";
   public static String cmdUrl = deviceURL + "interface/cmd";
   public static String devopscmdUrl = deviceURL + "devops/cmd";
+  public static String zhangqiangTestUrl = deviceURL + "zhangqiang/cmd";
 
   public static String cipherresponseUrl =  deviceURL +"cipher/response";
 

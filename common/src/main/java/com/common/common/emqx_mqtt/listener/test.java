@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class test {
 
-  @RequestMapping("/")
+  @RequestMapping("/testurl")
   public String get() {
-    MqttClientService.send("/abcd",
+    MqttClientService.send("/v1/zhangqiang/security/zhangqiang/cmd",
         "{'fileName':'张强','filePackUrl':'group1/M00/00/00/GduVZmCsn2OAdUrzD6fvgiUKmlg692.zip?attname=Java.zip'}",
         1);
     return "1";
