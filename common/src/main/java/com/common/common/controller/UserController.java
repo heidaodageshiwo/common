@@ -35,7 +35,7 @@ public class UserController {
   private UserService userService;
 
 
-  //mybatisplus分支操作11
+  //mybatisplus分支操作  emqx(mqtt)操作
   @RequestMapping("/select")
   public List<User> testSelect() {
     System.out.println(("----- selectAll method test ------"));
