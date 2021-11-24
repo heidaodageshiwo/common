@@ -9,7 +9,14 @@ import com.common.common.util.RedisUtils;
 import com.sun.javafx.collections.MappingChange.Map;
 import java.util.List;
 import org.apache.ibatis.annotations.Select;
+import org.redisson.Redisson;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
+import org.redisson.config.SingleServerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,7 +45,51 @@ public class UserController {
   @Autowired
   private RedisUtils redisUtils;
 
-  //mybatisplus分支操作 redis
+  //mybatisplus分支操作 redis  redission
+
+
+ /* @Autowired
+  private RedisTemplate redisTemplate;
+*/
+  @RequestMapping("/redission")
+  public List<User> redission() {
+
+
+
+
+    List<User> userList = userMapper.selectList(null);
+    return userList;
+  }
+
+  @GetMapping("/test4")
+  public void test4() {
+    /*Config config = new Config();
+    SingleServerConfig singleServerConfig = config.useSingleServer()
+        .setAddress("192.168.56.213:6379");
+    RedissonClient redisson = Redisson.create(singleServerConfig);*/
+    Config config = new Config();
+    config.useSingleServer().setAddress("redis://192.168.56.213:6379");
+    // 2. Create Redisson instance
+    RedissonClient redissonClient = Redisson.create(config);
+
+    String stockKey = "product_1001";
+    RLock lock = redissonClient.getLock(stockKey);
+    try {
+      // 加锁
+      lock.lock();
+      int stock = Integer.parseInt( redisUtils.get("stock")+"");
+      if (stock > 0) {
+        int realStock = stock -1;
+        redisUtils.set("stock", String.valueOf(realStock));
+        System.out.println("扣减成功，剩余库存：" + realStock);
+      } else {
+        System.out.println("扣减失败，库存不足");
+      }
+    } finally {
+      // 释放锁
+      lock.unlock();
+    }
+  }
 
   @RequestMapping("/redistest")
   public List<User> redistest() {
