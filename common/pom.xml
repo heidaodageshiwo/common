@@ -50,6 +50,27 @@
       <artifactId>fastjson</artifactId>
       <version>1.2.76</version>
     </dependency>
+
+    <!-- springboot整合redis -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-redis</artifactId>
+    </dependency>
+    <!--guawa工具类-->
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>27.0.1-jre</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.11.4</version>
+    </dependency>
+
+
+
   </dependencies>
 
   <build>

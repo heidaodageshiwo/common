@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.common.common.entity.User;
 import com.common.common.mapper.UserMapper;
 import com.common.common.service.UserService;
+import com.common.common.util.RedisUtils;
 import com.sun.javafx.collections.MappingChange.Map;
 import java.util.List;
 import org.apache.ibatis.annotations.Select;
@@ -34,8 +35,33 @@ public class UserController {
   @Autowired
   private UserService userService;
 
+  @Autowired
+  private RedisUtils redisUtils;
 
   //mybatisplus分支操作 redis
+
+  @RequestMapping("/redistest")
+  public List<User> redistest() {
+    boolean set = redisUtils.set("zhangqiang", "zhangqiang1");
+    String zhangqiang1 = (String) redisUtils.get("zhangqiang");
+    System.out.println(zhangqiang1);
+    Object zhangqiang = redisUtils.get("zhangqiang");
+    System.out.println(zhangqiang);
+    System.out.println(set+"===============");
+    System.out.println(("----- selectAll method test ------"));
+    List<User> userList = userMapper.selectList(null);
+//    Assert.assertEquals(5, userList.size());
+    userList.forEach(System.out::println);
+    return userList;
+  }
+
+
+
+
+
+
+
+
   @RequestMapping("/select")
   public List<User> testSelect() {
     System.out.println(("----- selectAll method test ------"));
