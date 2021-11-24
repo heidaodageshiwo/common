@@ -35,7 +35,7 @@ public class UserController {
   private UserService userService;
 
 
-  //mybatisplus分支操作111
+  //mybatisplus分支操作
   @RequestMapping("/select")
   public List<User> testSelect() {
     System.out.println(("----- selectAll method test ------"));
