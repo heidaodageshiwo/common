@@ -3,6 +3,7 @@ package com.common.common.flink.stream.test;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -28,7 +29,8 @@ import java.text.SimpleDateFormat;
  */
 public class WaterMarkTest {
     public static void main(String[] args) {
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(new Configuration());
+//        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
         //设置时间类型
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);//解决乱序，延迟高
@@ -37,9 +39,10 @@ public class WaterMarkTest {
 
         //设置多久查看水位线，默认200ms
         System.out.println(env.getConfig().getAutoWatermarkInterval());
+//        env.getConfig().setAutoWatermarkInterval(5000);
         env.getConfig().setAutoWatermarkInterval(10000);
 
-        DataStreamSource<String> stream = env.socketTextStream("bd1701", 9999);
+        DataStreamSource<String> stream = env.socketTextStream("localhost", 9999);
 
         //水印就在流中，作为一个时间戳存在
         stream.assignTimestampsAndWatermarks(new MyWaterMark())
