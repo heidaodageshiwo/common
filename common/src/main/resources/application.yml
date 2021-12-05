@@ -1,6 +1,21 @@
+server:
+  port: 8080
 spring:
+  application:
+    name: postgres
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/zq?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8
-    username: root
-    password: zhangqiang
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://192.168.56.213:25432/db1?characterEncodeing=utf8
+    username: postgres
+    password: 123456
+
+
+mybatis:
+  mapper-locations:   classpath:mapper/*.xml
+
+logging:
+  level:
+    com.example: debug
+
+

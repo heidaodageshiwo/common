@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.common.common.postgressql.dao.SchoolDao">
+
+    <resultMap type="com.common.common.postgressql.entity.School" id="SchoolMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="schoolName" column="school_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SchoolMap">
+        select
+          id, school_name
+        from public.school
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SchoolMap">
+        select
+          id, school_name
+        from public.school
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="SchoolMap">
+        select
+        id, school_name
+        from public.school
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="schoolName != null and schoolName != ''">
+                and school_name = #{schoolName}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into public.school(school_name)
+        values (#{schoolName})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into public.school(school_name)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.schoolName})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into public.school(school_name)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.schoolName})
+        </foreach>
+        on duplicate key update
+        school_name = values(school_name)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update public.school
+        <set>
+            <if test="schoolName != null and schoolName != ''">
+                school_name = #{schoolName},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from public.school where id = #{id}
+    </delete>
+
+</mapper>
+

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.common.common.postgressql.dao.StudentSubjectDao">
+
+    <resultMap type="com.common.common.postgressql.entity.StudentSubject" id="StudentSubjectMap">
+        <result property="studentId" column="student_id" jdbcType="INTEGER"/>
+        <result property="subjectId" column="subject_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="StudentSubjectMap">
+        select
+          student_id, subject_id
+        from public.student_subject
+        where student_id = #{studentId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="StudentSubjectMap">
+        select
+          student_id, subject_id
+        from public.student_subject
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="StudentSubjectMap">
+        select
+        student_id, subject_id
+        from public.student_subject
+        <where>
+            <if test="studentId != null">
+                and student_id = #{studentId}
+            </if>
+            <if test="subjectId != null">
+                and subject_id = #{subjectId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="studentId" useGeneratedKeys="true">
+        insert into public.student_subject()
+        values ()
+    </insert>
+
+    <insert id="insertBatch" keyProperty="studentId" useGeneratedKeys="true">
+        insert into public.student_subject()
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            ()
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="studentId" useGeneratedKeys="true">
+        insert into public.student_subject()
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            ()
+        </foreach>
+        on duplicate key update
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update public.student_subject
+        <set>
+        </set>
+        where student_id = #{studentId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from public.student_subject where student_id = #{studentId}
+    </delete>
+
+</mapper>
+
