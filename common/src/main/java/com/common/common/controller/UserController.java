@@ -35,7 +35,7 @@ public class UserController {
   private UserService userService;
 
 
-  //mybatisplus分支操作
+  //mybatisplus分支操作 postgressql
   @RequestMapping("/select")
   public List<User> testSelect() {
     System.out.println(("----- selectAll method test ------"));
