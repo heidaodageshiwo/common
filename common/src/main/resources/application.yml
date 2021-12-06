@@ -1,6 +1,19 @@
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/zq?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8
+#    username: root
+#    password: zhangqiang
+
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/zq?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8
-    username: root
-    password: zhangqiang
+    type: com.alibaba.druid.pool.DruidDataSource
+    click:
+      driverClassName: ru.yandex.clickhouse.ClickHouseDriver
+      url: jdbc:clickhouse://192.168.56.213:8123/zhangqiang
+      username: default
+      password: 123456
+      initialSize: 10
+      maxActive: 100
+      minIdle: 10
+      maxWait: 6000
