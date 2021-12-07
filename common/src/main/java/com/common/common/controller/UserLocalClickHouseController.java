@@ -42,5 +42,11 @@ public class UserLocalClickHouseController {
     userList.forEach(System.out::println);
     return userList;
   }
-
+  @RequestMapping("/selectclickHousePage")
+  public List<UserLocal> selectclickHousePage() {
+    Page<UserLocal> userLocalPage = userLocalMapper.selectPage(new Page<>(2, 10),
+        new QueryWrapper<>());
+//    userList.forEach(System.out::println);
+    return userLocalPage.getRecords();
+  }
 }
