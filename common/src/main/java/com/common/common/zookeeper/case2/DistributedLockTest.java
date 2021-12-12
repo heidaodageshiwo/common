@@ -1,4 +1,4 @@
-package com.atguigu.case2;
+package com.common.common.zookeeper.case2;
 
 import org.apache.zookeeper.KeeperException;
 
