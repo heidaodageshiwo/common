@@ -14,11 +14,24 @@ public class HbaseTest {
   private static Admin admin;
   private static final String COLUMNS_FAMILY_1 = "cf1";
   private static final String COLUMNS_FAMILY_2 = "cf2";
-  public static Connection initHbase() throws IOException {
+  //docker版  docker安装的hbase不需要 设置 hbase.master
+  //https://blog.csdn.net/hunheidaode/article/details/121475690
+
+  /* public static Connection initHbase() throws IOException {
     Configuration configuration = HBaseConfiguration.create();
     configuration.set("hbase.zookeeper.quorum", "192.168.56.211");
     configuration.set("hbase.zookeeper.property.clientPort", "2181");
 //    configuration.set("hbase.master", "192.168.56.211:60000");
+    Connection connection = ConnectionFactory.createConnection(configuration);
+    return connection;
+  }*/
+  //hadoop版  需要设置 hbase.master 地址
+  //https://blog.csdn.net/hunheidaode/article/details/121889974
+  public static Connection initHbase() throws IOException {
+    Configuration configuration = HBaseConfiguration.create();
+    configuration.set("hbase.zookeeper.quorum", "192.168.56.211");
+    configuration.set("hbase.zookeeper.property.clientPort", "2181");
+    configuration.set("hbase.master", "192.168.56.211:60000");
     Connection connection = ConnectionFactory.createConnection(configuration);
     return connection;
   }
@@ -138,12 +151,12 @@ public class HbaseTest {
     student.setName("Arvin");
     student.setAge("18");
     String table = "student";
-//createTable(getTbName(table), new String[]{COLUMNS_FAMILY_1, COLUMNS_FAMILY_2});
+createTable(getTbName(table), new String[]{COLUMNS_FAMILY_1, COLUMNS_FAMILY_2});
 //         deleteTable(getTbName(table));
-        insertData(getTbName(table), student);
+//        insertData(getTbName(table), student);
     //        deleteData(getTbName(table), "1");
 
-    singleGet(getTbName(table), "1");
+//    singleGet(getTbName(table), "1");
 //    getCell(getTbName(table), "2", "cf1", "name");
   }
 }
