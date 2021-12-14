@@ -57,9 +57,13 @@
       <artifactId>hive-jdbc</artifactId>
       <version>3.1.2</version>
       <exclusions>
-        <exclusion>
+    <!--    <exclusion>
           <groupId>org.eclipse.jetty.aggregate</groupId>
           <artifactId>jetty-all</artifactId>
+        </exclusion>-->
+        <exclusion>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-runner</artifactId>
         </exclusion>
         <exclusion>
           <groupId>org.apache.hive</groupId>
