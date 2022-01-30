@@ -1,0 +1,22 @@
+CREATE TABLE t_user(
+	id INT(6) PRIMARY KEY AUTO_INCREMENT,
+	username VARCHAR(60),
+	password VARCHAR(60),
+	email VARCHAR(60)
+);
+CREATE TABLE t_province(
+	id INT(6) PRIMARY KEY AUTO_INCREMENT,
+	name VARCHAR(60),
+	tags VARCHAR(80),
+	placecounts INT(4)
+);
+CREATE TABLE t_place(
+	id INT(6) PRIMARY KEY AUTO_INCREMENT,
+	name VARCHAR(60),
+	picpath MEDIUMTEXT,
+	hottime	TIMESTAMP,
+	hotticket	DOUBLE(7,2),
+	dimticket	DOUBLE(7,2),
+	placedes	VARCHAR(300),
+	provinceid	INT(6) REFERENCES t_province(id)
+);
