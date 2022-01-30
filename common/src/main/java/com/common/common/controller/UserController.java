@@ -9,7 +9,11 @@ import com.sun.javafx.collections.MappingChange.Map;
 import java.util.List;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -27,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version: 1.0 *
  */
 @RestController
+@CrossOrigin
 public class UserController {
 
   @Autowired
@@ -35,7 +40,8 @@ public class UserController {
   private UserService userService;
 
 
-  //mybatisplus分支操作
+
+  //mybatisplus分支操作 vue分支
   @RequestMapping("/select")
   public List<User> testSelect() {
     System.out.println(("----- selectAll method test ------"));
@@ -44,6 +50,26 @@ public class UserController {
     userList.forEach(System.out::println);
     return userList;
   }
+
+    @RequestMapping("/selecta")
+  public List<User> testSelecta(@RequestParam("id") String id,@RequestParam("name") String name) {
+      System.out.println(id+"=="+name);
+    System.out.println(("----- selectAll method test ------"));
+    List<User> userList = userMapper.selectList(null);
+//    Assert.assertEquals(5, userList.size());
+    userList.forEach(System.out::println);
+    return userList;
+  }
+  @PostMapping("/selectpost")
+  public List<User> selectpost(@RequestBody User user) {
+    System.out.println(user);
+    System.out.println(("----- selectAll method test ------"));
+    List<User> userList = userMapper.selectList(null);
+//    Assert.assertEquals(5, userList.size());
+    userList.forEach(System.out::println);
+    return userList;
+  }
+
 
   @RequestMapping("/insert")
   public void insert() {
