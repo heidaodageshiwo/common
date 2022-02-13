@@ -1,0 +1,17 @@
+hello world
+hello spark
+
+bin/spark-submit \
+--class org.apache.spark.examples.SparkPi \
+--master spark://master:7077 \
+./examples/jars/spark-examples_2.12-3.0.0.jar \
+10
+
+
+bin/spark-submit \
+--class org.apache.spark.examples.SparkPi \
+--master spark://master:7077,node1:7077 \
+./examples/jars/spark-examples_2.12-3.0.0.jar \
+10
+
+

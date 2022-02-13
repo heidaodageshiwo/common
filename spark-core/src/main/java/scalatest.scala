@@ -14,7 +14,6 @@
  *           * */
 object scalatest {
   def main(args: Array[String]): Unit = {
-    print("spark-core")
     println("spark")
   }
 }
