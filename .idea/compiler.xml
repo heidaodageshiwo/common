@@ -12,6 +12,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="spark-core" target="1.8" />
       <module name="test" target="1.8" />
       <module name="travels" target="1.8" />
     </bytecodeTargetLevel>
