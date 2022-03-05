@@ -7,14 +7,19 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="common1" />
+        <module name="springboot-kafka" />
         <module name="common" />
+        <module name="spark-kafka" />
+        <module name="kafka" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="common" options="-parameters" />
+      <module name="kafka" options="-parameters" />
+      <module name="spark-kafka" options="-parameters" />
+      <module name="springboot-kafka" options="-parameters" />
     </option>
   </component>
 </project>
