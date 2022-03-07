@@ -1,0 +1,6 @@
+server:
+  port: 801
+
+spring:
+  application:
+    name: cloud-order-service

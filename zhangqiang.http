@@ -1,3 +1,18 @@
+
+POST http://localhost:801/consumer/payment/create
+Content-Type: application/json
+
+{
+  "serial": "serial1"
+}
+
+###
+GET http://localhost:801/consumer/payment/get/1
+Accept: application/json
+
+###
+
+
 POST http://localhost:8001/payment/create
 Content-Type: application/json
 
