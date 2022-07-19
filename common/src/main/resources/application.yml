@@ -1,6 +1,41 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/zq?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://152.136.98.72:3306/test1?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8
     username: root
-    password: zhangqiang
+    password: root
+rocketmq:
+  config:
+    # if this value is empty,use env value rocketmq.config.namesrvAddr  NAMESRV_ADDR | now, default localhost:9876
+    # configure multiple namesrv addresses to manage multiple different clusters
+    namesrvAddrs:
+      #      - 192.168.56.211:9876
+      #      - 192.168.56.212:9876
+      #      - 192.168.56.213:9876
+      #      - 192.168.56.214:9876
+      - 127.0.0.1:9876
+    # if you use rocketmq version < 3.5.8, rocketmq.config.isVIPChannel should be false.default true
+    isVIPChannel:
+    # timeout for mqadminExt, default 5000ms
+    timeoutMillis:
+    # rocketmq-console's data path:dashboard/monitor
+    dataPath: /tmp/rocketmq-console/data
+    # set it false if you don't want use dashboard.default true
+    enableDashBoardCollect: true
+    # set the message track trace topic if you don't want use the default one
+    msgTrackTopicName:
+    ticketKey: ticket
+    # must create userInfo file: ${rocketmq.config.dataPath}/users.properties if the login is required
+    loginRequired: false
+    useTLS: false
+    # set the accessKey and secretKey if you used acl
+    accessKey: rocketmq2
+    secretKey: 12345678
+
+
+threadpool:
+  config:
+    coreSize: 10
+    maxSize: 10
+    keepAliveTime: 3000
+    queueSize: 5000
