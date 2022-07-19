@@ -61,7 +61,9 @@ public class TransactionProducer {
     public static void main(String[] args) throws MQClientException, InterruptedException {
 
 
-
+        //博客参考地址 https://blog.csdn.net/Little_fxc/article/details/124045665
+        //博客参考地址 https://blog.csdn.net/xiaozhongmiaoyun/article/details/106087304
+        //博客参考地址 https://blog.csdn.net/Saintmm/article/details/119826091
         // 生产者事务监听器
         TransactionListener transactionListener = new OrderTransactionListener();
         TransactionMQProducer producer = new TransactionMQProducer("ProducerGroupName", getAclRPCHook());
