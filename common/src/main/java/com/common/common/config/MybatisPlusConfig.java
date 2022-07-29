@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @MapperScan("com.common.common.mapper")
 public class MybatisPlusConfig {
 
-  // 最新版
+  // 最新版  test docker k8s springboot
   @Bean
   public MybatisPlusInterceptor mybatisPlusInterceptor() {
     MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
