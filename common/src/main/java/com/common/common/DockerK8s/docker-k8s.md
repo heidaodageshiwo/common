@@ -39,8 +39,21 @@ firewall-cmd --reload
 ```
 
 
+博客：https://blog.csdn.net/qq_46624276/article/details/125317840
 
 
 
 
+FROM java:8
+MAINTAINER zq  
+VOLUME /tmp    
+ADD common-0.0.1-SNAPSHOT.jar demo.jar   
+RUN bash -c 'touch /demo.jar'
+ENTRYPOINT ["java","-jar","/demo.jar"]
+EXPOSE 8081   
+
+
+docker build -t demo:1.0 .
+
+docker run -d -p 8081:8081 demo:1.0
 
