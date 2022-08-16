@@ -21,12 +21,18 @@ import java.util.HashSet;
 public class test {
     public static void main(String[] args) {
         HashSet<HostAndPort> objects = new HashSet<>();
-    objects.add(new HostAndPort("192.168.56.211",7001));
+   /* objects.add(new HostAndPort("192.168.56.211",7001));
     objects.add(new HostAndPort("192.168.56.211",7002));
     objects.add(new HostAndPort("192.168.56.211",7003));
     objects.add(new HostAndPort("192.168.56.211",7004));
     objects.add(new HostAndPort("192.168.56.211",7005));
-    objects.add(new HostAndPort("192.168.56.211",7006));
+    objects.add(new HostAndPort("192.168.56.211",7006));*/
+        objects.add(new HostAndPort("192.168.56.211",31000));
+        objects.add(new HostAndPort("192.168.56.211",31001));
+        objects.add(new HostAndPort("192.168.56.211",31002));
+        objects.add(new HostAndPort("192.168.56.211",31100));
+        objects.add(new HostAndPort("192.168.56.211",31101));
+        objects.add(new HostAndPort("192.168.56.211",31102));
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
         JedisCluster jedisCluster = new JedisCluster(objects,jedisPoolConfig);
         System.out.println(jedisCluster.get("name"));
