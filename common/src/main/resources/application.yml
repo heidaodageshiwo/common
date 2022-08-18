@@ -1,11 +1,11 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/zq?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://152.136.98.72:3306/test1?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8
     username: root
-    password: zhangqiang
+    password: root
   kafka:
-    bootstrap-servers: 192.168.56.211:9092
+    bootstrap-servers: 192.168.56.211:32743,192.168.56.211:32320,192.168.56.211:30192
     #生产者的配置，大部分我们可以使用默认的，这里列出几个比较重要的属性
     producer:
       #每批次发送消息的数量
