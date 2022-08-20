@@ -34,7 +34,11 @@ public class test {
         objects.add(new HostAndPort("192.168.56.211",31101));
         objects.add(new HostAndPort("192.168.56.211",31102));
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        JedisCluster jedisCluster = new JedisCluster(objects,jedisPoolConfig);
+
+//        JedisCluster jedisCluster = new JedisCluster(objects,jedisPoolConfig);
+        JedisCluster jedisCluster = new JedisCluster(objects,100000,10000);
+      /*  JedisCluster jedisCluster = new JedisCluster(objects, 100000, 100000, 1000, "",
+                jedisPoolConfig);*/
         System.out.println(jedisCluster.get("name"));
     }
 }
