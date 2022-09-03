@@ -16,8 +16,15 @@ import redis.clients.jedis.Jedis;
  */
 public class ad {
     public static void main(String[] args) {
-        Jedis jedis = new Jedis("192.168.56.211", 30000);
+       /* Jedis jedis = new Jedis("192.168.56.211", 30000);
         jedis.auth("hvS4Y1AXgE");
+//        jedis.select(0);
+        String biName = jedis.get("name");
+        System.out.println(biName);*/
+        Jedis jedis = new Jedis("my.hhhtraefik-dashboard.com", 6379);
+        jedis.auth("123456");
+        System.out.println(jedis.clientInfo());
+//        jedis.auth("hvS4Y1AXgE");
 //        jedis.select(0);
         String biName = jedis.get("name");
         System.out.println(biName);

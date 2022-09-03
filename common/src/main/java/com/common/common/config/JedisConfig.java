@@ -1,3 +1,4 @@
+/*
 package com.common.common.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -25,8 +26,10 @@ public class JedisConfig {
  @Value("${spring.redis.database}")
     private String database;
 
+*/
 /*    @Value("${spring.redis.cluster.max-redirects}")
-    private int maxRedirects;*/
+    private int maxRedirects;*//*
+
 
     @Value("${redis.timeout}")
     private int timeout;
@@ -55,11 +58,13 @@ public class JedisConfig {
     @Value("${redis.testWhileIdle}")
     private boolean testWhileIdle;
 
-    /**
+    */
+/**
      * Redis连接池的配置
      *
      * @return JedisPoolConfig
-     */
+     *//*
+
     @Bean
     public JedisPoolConfig getJedisPoolConfig() {
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
@@ -83,10 +88,12 @@ public class JedisConfig {
     }
 
 
-    /**
+    */
+/**
      * Redis集群的配置
      * @return RedisClusterConfiguration
-     */
+     *//*
+
     @Bean
     public RedisClusterConfiguration redisClusterConfiguration() {
         RedisClusterConfiguration redisClusterConfiguration = new RedisClusterConfiguration();
@@ -102,10 +109,12 @@ public class JedisConfig {
         return redisClusterConfiguration;
     }
 
-    /**
+    */
+/**
      * redis连接工厂类
      * @return JedisConnectionFactory
-     */
+     *//*
+
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
         // 集群模式
@@ -114,11 +123,13 @@ public class JedisConfig {
     }
 
 
-    /**
+    */
+/**
      * 实例化 RedisTemplate 对象
      *
      * @return RedisTemplate<String, Object>
-     */
+     *//*
+
     @Bean
     public RedisTemplate<String,Object> redisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
@@ -127,9 +138,11 @@ public class JedisConfig {
         return redisTemplate;
     }
 
-    /**
+    */
+/**
      * 设置数据存入 redis 的序列化方式 使用默认的序列化会导致key乱码
-     */
+     *//*
+
     private void initDomainRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
         // 开启redis数据库事务的支持
         redisTemplate.setEnableTransactionSupport(true);
@@ -158,4 +171,4 @@ public class JedisConfig {
         redisTemplate.afterPropertiesSet();
     }
 
-}
+}*/
