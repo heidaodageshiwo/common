@@ -4,3 +4,6 @@ spring:
     url: jdbc:mysql://localhost:3306/zq?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF-8
     username: root
     password: zhangqiang
+elasticsearch:
+  # 多个IP逗号隔开
+  hosts: 192.168.56.213:9200
