@@ -5,5 +5,8 @@ spring:
     username: root
     password: zhangqiang
 elasticsearch:
+  username: elastic
+  passwd: z09FFpU_Wv2LgouyI-vp
+  apikey: YWtvcVpJTUJFX29pcEVmZGVpamM6NEVtcF9iS1FSVHlYRm45VVBQVlc5dw==
   # 多个IP逗号隔开
   hosts: 192.168.56.213:9200
