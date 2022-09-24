@@ -67,6 +67,12 @@
       <version>2.0.1</version>
     </dependency>
 
+    <!-- 有授权 客户端-->
+    <dependency>
+      <groupId>org.elasticsearch.plugin</groupId>
+      <artifactId>x-pack-sql-jdbc</artifactId>
+      <version>8.4.1</version>
+    </dependency>
 
     <dependency>
       <groupId>mysql</groupId>
