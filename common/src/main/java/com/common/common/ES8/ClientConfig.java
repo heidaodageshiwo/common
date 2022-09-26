@@ -98,7 +98,7 @@ public class ClientConfig {
     }
 
     private static SSLContext buildSSLContext() {
-        ClassPathResource resource = new ClassPathResource("es01.crt");
+        ClassPathResource resource = new ClassPathResource("http_ca.crt");
         SSLContext sslContext = null;
         try {
             CertificateFactory factory = CertificateFactory.getInstance("X.509");

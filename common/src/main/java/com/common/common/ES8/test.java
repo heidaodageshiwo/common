@@ -1,5 +1,8 @@
 package com.common.common.ES8;
 
+import com.common.common.ES8.Builder.BuilderTest;
+import com.common.common.ES8.Builder.BuilderTest1;
+
 /**
  * @ProjectName: common1
  * @PackageName: com.common.common.ES8
@@ -15,4 +18,10 @@ package com.common.common.ES8;
 public class test {
 
     //测试在单元测试里面
+    public static void main(String[] args) {
+        BuilderTest zq = BuilderTest.builder().name("zq").build();
+        System.out.println(zq.getName()+"\n"+zq.getAddress());
+        BuilderTest1 xas = BuilderTest1.builder().name("xas").address("ddf").build();
+        System.out.println(xas.getName()+"\n"+xas.getAddress());
+    }
 }
