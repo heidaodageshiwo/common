@@ -26,6 +26,10 @@ public class Product {
     private String name;
     private double price;
 
+//    @JsonDeserialize(using = LocalDateTimeDeserializer.class) // 反序列化
+//    @JsonSerialize(using = LocalDateTimeSerializer.class) // 序列化
+//    private LocalDateTime time;
+
     public String getSku() {
         return sku;
     }
