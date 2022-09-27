@@ -1,14 +1,10 @@
 package com.common.common;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
-import co.elastic.clients.elasticsearch._types.SortOrder;
-import co.elastic.clients.elasticsearch._types.Time;
-import co.elastic.clients.elasticsearch._types.TimeUnit;
+import co.elastic.clients.elasticsearch._types.*;
 import co.elastic.clients.elasticsearch._types.aggregations.HistogramBucket;
 import co.elastic.clients.elasticsearch._types.mapping.*;
-import co.elastic.clients.elasticsearch._types.query_dsl.MatchQuery;
-import co.elastic.clients.elasticsearch._types.query_dsl.Query;
-import co.elastic.clients.elasticsearch._types.query_dsl.RangeQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import co.elastic.clients.elasticsearch.cat.IndicesResponse;
 import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
@@ -16,8 +12,12 @@ import co.elastic.clients.elasticsearch.core.bulk.BulkOperationVariant;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.elasticsearch.indices.*;
 import co.elastic.clients.elasticsearch.indices.get_alias.IndexAliases;
+import co.elastic.clients.elasticsearch.indices.get_mapping.IndexMappingRecord;
+import co.elastic.clients.elasticsearch.security.*;
+import co.elastic.clients.elasticsearch.transform.Settings;
 import co.elastic.clients.json.JsonData;
 import co.elastic.clients.transport.endpoints.BooleanResponse;
+import co.elastic.clients.util.DateTime;
 import co.elastic.clients.util.ObjectBuilder;
 import com.common.common.ES8.entity.Product;
 import org.junit.jupiter.api.Test;
@@ -28,9 +28,13 @@ import shadow.org.elasticsearch.xpack.sql.proto.core.TimeValue;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.sql.Array;
+import java.text.SimpleDateFormat;
+import java.time.temporal.Temporal;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @ProjectName: common1
@@ -62,6 +66,31 @@ class ESTest1 {
 
     }
 
+    //创建索引设置setting mapping
+    @Test
+    void addIndex2settingmapping() throws IOException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        long time = date.getTime();
+        System.out.println(time);
+        elasticsearchClient.indices().create(
+                a -> a.index("a7").aliases("a71", as -> as.isWriteIndex(true))
+                        .settings(s -> s.numberOfShards("2")
+                                .numberOfReplicas("1")
+                                .maxResultWindow(2000000000)
+                        )
+                        .mappings(m -> m.properties("name", p -> p.text(t -> t.fields("keyword", Sa -> Sa.keyword(k -> k.ignoreAbove(256)))))
+                                .properties("createUserId", Property.of(o -> o.keyword(k -> k.index(true))))
+                                .properties("createTime", Property.of(o -> o.date(d -> d.index(true))))
+                                .properties("price", Property.of(o -> o.float_(f -> f.index(true))))
+                                .properties("id", Property.of(o -> o.long_(f -> f.index(true))))
+                                .properties("title", Property.of(o -> o.text(f -> f.index(true))))
+                                .properties("content", Property.of(o -> o.text(f -> f.index(true))))
+                                .properties("sku", Property.of(o -> o.text(t -> t.fields("keyword", sa -> sa.keyword(k -> k.ignoreAbove(256))))))
+                        )
+        );
+    }
+
     @Test
     void addIndex1() throws IOException {
 //        https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/8.1/building-objects.html
@@ -84,16 +113,17 @@ class ESTest1 {
 
     //插入数据
     @Test
-    void addIndex2() throws IOException {
+    void addData() throws IOException {
 //        https://github.com/elastic/elasticsearch-java/blob/8.1/java-client/src/test/java/co/elastic/clients/documentation/usage/IndexingTest.java
 //        https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/8.1/blocking-and-async.html
 //        file:///C:/Users/Administrator/Desktop/elasticsearch-head-master/index.html
 //        https://192.168.56.213:9200/?auth_user=elastic&auth_password=123456
+//        https://192.168.56.213:9200/?auth_user=zhangqiang2&auth_password=zhangqiang2
 //        https://blog.csdn.net/yscjhghngh/article/details/123620860
         Product product = new Product("bk-2", "City bike", 123.0);
         IndexRequest<Product> a1 = IndexRequest.of(a -> a.index("a")
                 .id("2")
-                .document(product)
+                .document(product).refresh(Refresh.True)
         );
         IndexResponse index = elasticsearchClient.index(a1);
         System.out.println("index:" + index);
@@ -105,8 +135,11 @@ class ESTest1 {
         Product product = new Product("bk-2", "City bike", 1233.0);
         Product product1 = new Product("bk-21", "City bike1", 12331.0);
         UpdateRequest<Product, Product> a1 = UpdateRequest.of(a -> a.index("a")
-                .id("2")
-                .doc(product)
+                        .id("2")
+                        .doc(product)
+//                无则新增，有责更新
+                        .docAsUpsert(true)
+//                .upsert()
         );
         UpdateResponse<Product> update = elasticsearchClient.update(a1, Product.class);
 
@@ -197,8 +230,26 @@ class ESTest1 {
                         .from(0)
                         .size(100)
                         .sort(s -> s.field(f -> f.field("price").order(SortOrder.Asc)))
-                ,
-                Product.class);
+                //条件过滤查询
+//                        .source(r -> r.filter(f -> f.includes("name", "age").excludes("")))
+                //组合查询
+                        /*  .query(q -> q.bool(b -> b.must(m -> m.match(u -> u.field("age").query(FieldValue.of(18))))
+                                  .must(m -> m.match(u -> u.field("sex").query(FieldValue.of("男"))))
+                                  .must(m -> m.match(u -> u.field("sex").query(FieldValue.of("男"))))
+                          ))*/
+                // 范围查询，gte()表示取大于等于，gt()表示大于，lte()表示小于等于
+//                        .query(q->q.range(r->r.field("age").gte(JsonData.of(15)).lt(JsonData.of(20))))
+                //模糊查询 fuzziness表示差几个可以查询出来
+//                        .query(q -> q.fuzzy(f -> f.field("name").value(FieldValue.of("zhangsan")).fuzziness("18")))
+                //高亮查询
+                        /*.query(q -> q.term(t -> t.field("name").value(FieldValue.of("zhangsan"))))
+                        .highlight(h -> h.fields("name", f -> f.preTags("<font color='red'>").postTags("</font>")))*/
+                //聚合查询 取最大年龄
+//                        .aggregations("maxAge", ax ->ax.max(m -> m.field("age")))
+                //分组查询
+//                        .aggregations("ageGroup", a ->a.terms(t -> t.field("age")))
+
+                , Product.class);
         for (Hit<Product> hit : search.hits().hits()) {
             System.out.println("bbbb:" + hit.source());
         }
@@ -307,6 +358,17 @@ class ESTest1 {
         for (Product doc : objects) {
             bulkOperationArrayList.add(new BulkOperation.Builder().create(d -> d.document(doc)).build());
         }
+
+        //3
+        // 构建一个批量数据集合
+        List<BulkOperation> list = new ArrayList<>();
+//        list.add(new BulkOperation.Builder().create(d -> d.document(new User("zhangsan","男",18)).id("1001").index("user")).build());
+//        list.add(new BulkOperation.Builder().delete(d -> d.id("1001").index("user")).build());
+        // 调用bulk方法执行批量插入操作
+//        BulkResponse response = elasticsearchClient.bulk(c -> c.index("user").operations(list));
+        //3
+
+
         BulkResponse bulk = elasticsearchClient.bulk(
                 a -> a.index("a2").operations(bulkOperationArrayList)
         );
@@ -365,10 +427,79 @@ class ESTest1 {
         });
     }
 
+    //创建索引带mapping
+    @Test
+    void createIndexandmapping1() throws IOException {
+//        https://github.com/elastic/elasticsearch-java/blob/8.1/java-client/src/test/java/co/elastic/clients/elasticsearch/end_to_end/RequestTest.java
+        String index = "testindex";
+
+        Map<String, Property> fields = Collections.singletonMap("keyword", Property.of(p -> p.keyword(k -> k.ignoreAbove(256))));
+        Property text = Property.of(p -> p.text(t -> t.fields(fields)));
+
+        elasticsearchClient.indices().create(c -> c
+                .index(index)
+                .mappings(m -> m
+                        .properties("id", text)
+                        .properties("name", p -> p
+                                .object(o -> o
+                                        .properties("first", text)
+                                        .properties("last", text)
+                                )
+                        )
+                )
+        );
+
+        GetMappingResponse mr = elasticsearchClient.indices().getMapping(mrb -> mrb.index(index));
+
+        assertNotNull(mr.result().get(index));
+        assertNotNull(mr.result().get(index).mappings().properties().get("name").object());
+    }
+
     @Test
     void getAllIndex() throws IOException {
         IndicesResponse indicesResponse = elasticsearchClient.cat().indices();
         indicesResponse.valueBody().forEach(info -> System.out.println("info = " + info.health() + "\t" + info.status() + "\t" + info.index() + "\t" + info.uuid() + "\t" + info.pri() + "\t" + info.rep() + "\t" + info.docsCount()));
+    }
+
+    @Test
+    void updatemaxResultWindow() throws IOException {
+        GetMappingResponse a7 = elasticsearchClient.indices().getMapping(g -> g.index("a7"));
+        System.out.println(a7);
+        elasticsearchClient.indices().putSettings(p -> p.index("a7").settings(s -> s.maxResultWindow(300000)));
+//        elasticsearchClient.indices().putMapping(p->p.index("a7").properties("max_result_window", Property.of(o -> o.long_(LongNumberProperty.of(sa -> sa.nullValue(30000L))))));
+    }
+
+    @Test
+    void updatebyquery() throws IOException {
+        Query id = TermQuery.of(o -> o.field("_id").value(v -> v.stringValue("1")))._toQuery();
+//        Query query = new TermsQuery.Builder().build().field("_id")._toQuery();
+        UpdateByQueryRequest build = new UpdateByQueryRequest.Builder().index("a")
+                .query(id)
+//                .script(s->s.inline(i->i.options("key","if(ctx.sku=='bk-1'){ctx.name='bk-1bk-1bk-1'}")))
+//                .script(s->s.inline(i->i.source("inline")))
+                .build();
+        UpdateByQueryResponse updateByQueryResponse = elasticsearchClient.updateByQuery(build);
+    }
+    @Test
+    void esuser() throws IOException {
+        GetUserPrivilegesResponse userPrivileges = elasticsearchClient.security().getUserPrivileges();
+        System.out.println(userPrivileges);
+        GetUserResponse user = elasticsearchClient.security().getUser();
+        System.out.println(user);
+        //角色
+        String rolesName="test2";
+        List<IndexPrivilege> lists=new ArrayList<>();
+        lists.add(IndexPrivilege.All);
+        PutRoleRequest build1 = new PutRoleRequest.Builder().cluster(ClusterPrivilege.All).name(rolesName)
+                .indices(IndicesPrivileges.of(o->o.names("aaaaa"+"*").allowRestrictedIndices(true).privileges(lists)))
+                .runAs("*").metadata("reserved",JsonData.of(true))
+                .build();
+        PutRoleResponse putRoleResponse = elasticsearchClient.security().putRole(build1);
+        System.out.println(putRoleResponse);
+        //zhangqiang2 用户是test2 角色 。  test2角色只能看索引aaaaa开头的索引
+        PutUserRequest build = new PutUserRequest.Builder().password("zhangqiang2").username("zhangqiang2").roles(rolesName).refresh(Refresh.True).build();
+        PutUserResponse putUserResponse = elasticsearchClient.security().putUser(build);
+        System.out.println(putUserResponse);
     }
 
 }
