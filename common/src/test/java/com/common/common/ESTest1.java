@@ -20,6 +20,8 @@ import co.elastic.clients.json.JsonData;
 import co.elastic.clients.transport.endpoints.BooleanResponse;
 import co.elastic.clients.util.DateTime;
 import co.elastic.clients.util.ObjectBuilder;
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.common.common.ES8.entity.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -526,6 +528,41 @@ class ESTest1 {
         System.out.println(user1);
     }
 
+    //https://blog.csdn.net/qq_24473507/article/details/126525835
+    @Test
+    void scroll() throws IOException {
+        List<SortOptions> sorts = new ArrayList<>();
+        if (StringUtils.isNotBlank("dto.getOrder()")) {
+            //设置排序
+            SortOptions sortOptions = SortOptions.of(s -> s.field(f -> f.field("dto.getOrder()").order(SortOrder.valueOf("dto.getOrderType()"))));
+            sorts.add(sortOptions);
+        }
+        SearchResponse<Product> search = elasticsearchClient.search(
+                a -> a.index("a2")
+                        //查询name字段包含hello的document(不使用分词器精确查找)
+//                        .from(0)
+                        .size(1)
+                        //高亮查询
+                        .query(q -> q.match(m -> m.field("name").query("City bike")))
+                        .scroll(t -> t.time("5s"))
+                , Product.class);
+        StringBuffer scrollId = new StringBuffer(search.scrollId());
+        //循环查询，直到查不到数据
+        ScrollResponse<Product> scroll = null;
+        do {
+            StringBuffer finalScrollId = scrollId;
+            System.out.println(finalScrollId);
+            scroll = elasticsearchClient.scroll(s -> s.scrollId(finalScrollId.toString()).scroll(t -> t.time("5s")), Product.class);
+            for (Hit<Product> hit : scroll.hits().hits()) {
+                System.out.println("=============================");
+                System.out.println("bbbb:" + hit.source());
+            }
+            scrollId = new StringBuffer(scroll.scrollId());
+        } while (!scroll.hits().hits().isEmpty());
+
+    }
+
+
     @Test
     void searchhighlightdata() throws IOException {
         SearchResponse<Product> search = elasticsearchClient.search(
@@ -534,11 +571,11 @@ class ESTest1 {
                         .from(0)
                         .size(100)
                         //高亮查询
-                        .query(q->q.match(m->m.field("name").query("City bike")))
+                        .query(q -> q.match(m -> m.field("name").query("City bike")))
                         .highlight(h -> h.fields("name",
                                 /*f -> f.preTags("<font color='red'>")
                                         .postTags("</font>").*/
-                                        f -> f.preTags("<span style='color:red'>")
+                                f -> f.preTags("<span style='color:red'>")
                                         .postTags("</span>").
                                         fragmentSize(1000000).numberOfFragments(0).requireFieldMatch(false).type(HighlighterType.Unified)))
                 , Product.class);
