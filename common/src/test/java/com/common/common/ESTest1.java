@@ -9,6 +9,7 @@ import co.elastic.clients.elasticsearch.cat.IndicesResponse;
 import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
 import co.elastic.clients.elasticsearch.core.bulk.BulkOperationVariant;
+import co.elastic.clients.elasticsearch.core.search.HighlighterType;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.elasticsearch.indices.*;
 import co.elastic.clients.elasticsearch.indices.get_alias.IndexAliases;
@@ -480,6 +481,7 @@ class ESTest1 {
                 .build();
         UpdateByQueryResponse updateByQueryResponse = elasticsearchClient.updateByQuery(build);
     }
+
     @Test
     void esuser() throws IOException {
         GetUserPrivilegesResponse userPrivileges = elasticsearchClient.security().getUserPrivileges();
@@ -487,12 +489,12 @@ class ESTest1 {
         GetUserResponse user = elasticsearchClient.security().getUser();
         System.out.println(user);
         //角色
-        String rolesName="test2";
-        List<IndexPrivilege> lists=new ArrayList<>();
+        String rolesName = "test2";
+        List<IndexPrivilege> lists = new ArrayList<>();
         lists.add(IndexPrivilege.All);
         PutRoleRequest build1 = new PutRoleRequest.Builder().cluster(ClusterPrivilege.All).name(rolesName)
-                .indices(IndicesPrivileges.of(o->o.names("aaaaa"+"*").allowRestrictedIndices(true).privileges(lists)))
-                .runAs("*").metadata("reserved",JsonData.of(true))
+                .indices(IndicesPrivileges.of(o -> o.names("aaaaa" + "*").allowRestrictedIndices(true).privileges(lists)))
+                .runAs("*").metadata("reserved", JsonData.of(true))
                 .build();
         PutRoleResponse putRoleResponse = elasticsearchClient.security().putRole(build1);
         System.out.println(putRoleResponse);
@@ -502,16 +504,18 @@ class ESTest1 {
         System.out.println(putUserResponse);
 
     }
+
     @Test
     void esuserrole() throws IOException {
-        GetRoleResponse role = elasticsearchClient.security().getRole(r->r.name("test1"));
+        GetRoleResponse role = elasticsearchClient.security().getRole(r -> r.name("test1"));
         System.out.println(role);
         //删除角色 test1
         DeleteRoleResponse test1 = elasticsearchClient.security().deleteRole(r -> r.name("test1").refresh(Refresh.True));
         System.out.println(test1);
-        GetRoleResponse role1 = elasticsearchClient.security().getRole(r->r.name("test1"));
+        GetRoleResponse role1 = elasticsearchClient.security().getRole(r -> r.name("test1"));
         System.out.println(role1);
     }
+
     @Test
     void esuserdel() throws IOException {
         GetUserResponse user = elasticsearchClient.security().getUser();
@@ -520,5 +524,28 @@ class ESTest1 {
         System.out.println(zhangqiang1);
         GetUserResponse user1 = elasticsearchClient.security().getUser();
         System.out.println(user1);
+    }
+
+    @Test
+    void searchhighlightdata() throws IOException {
+        SearchResponse<Product> search = elasticsearchClient.search(
+                a -> a.index("a2")
+                        //查询name字段包含hello的document(不使用分词器精确查找)
+                        .from(0)
+                        .size(100)
+                        //高亮查询
+                        .query(q->q.match(m->m.field("name").query("City bike")))
+                        .highlight(h -> h.fields("name",
+                                /*f -> f.preTags("<font color='red'>")
+                                        .postTags("</font>").*/
+                                        f -> f.preTags("<span style='color:red'>")
+                                        .postTags("</span>").
+                                        fragmentSize(1000000).numberOfFragments(0).requireFieldMatch(false).type(HighlighterType.Unified)))
+                , Product.class);
+        for (Hit<Product> hit : search.hits().hits()) {
+            Map<String, List<String>> highlight = hit.highlight();
+            System.out.println(highlight);
+            System.out.println("bbbb:" + hit.source());
+        }
     }
 }
