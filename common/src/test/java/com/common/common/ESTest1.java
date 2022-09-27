@@ -500,6 +500,25 @@ class ESTest1 {
         PutUserRequest build = new PutUserRequest.Builder().password("zhangqiang2").username("zhangqiang2").roles(rolesName).refresh(Refresh.True).build();
         PutUserResponse putUserResponse = elasticsearchClient.security().putUser(build);
         System.out.println(putUserResponse);
-    }
 
+    }
+    @Test
+    void esuserrole() throws IOException {
+        GetRoleResponse role = elasticsearchClient.security().getRole(r->r.name("test1"));
+        System.out.println(role);
+        //删除角色 test1
+        DeleteRoleResponse test1 = elasticsearchClient.security().deleteRole(r -> r.name("test1").refresh(Refresh.True));
+        System.out.println(test1);
+        GetRoleResponse role1 = elasticsearchClient.security().getRole(r->r.name("test1"));
+        System.out.println(role1);
+    }
+    @Test
+    void esuserdel() throws IOException {
+        GetUserResponse user = elasticsearchClient.security().getUser();
+        System.out.println(user);
+        DeleteUserResponse zhangqiang1 = elasticsearchClient.security().deleteUser(d -> d.username("zhangqiang1"));
+        System.out.println(zhangqiang1);
+        GetUserResponse user1 = elasticsearchClient.security().getUser();
+        System.out.println(user1);
+    }
 }
