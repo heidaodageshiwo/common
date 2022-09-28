@@ -559,6 +559,7 @@ class ESTest1 {
             }
             scrollId = new StringBuffer(scroll.scrollId());
         } while (!scroll.hits().hits().isEmpty());
+//        elasticsearchClient.clearScroll(scrollId);
 
     }
 
