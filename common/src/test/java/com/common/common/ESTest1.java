@@ -123,6 +123,7 @@ class ESTest1 {
 //        https://192.168.56.213:9200/?auth_user=elastic&auth_password=123456
 //        https://192.168.56.213:9200/?auth_user=zhangqiang2&auth_password=zhangqiang2
 //        https://blog.csdn.net/yscjhghngh/article/details/123620860
+//        https://elasticstack.blog.csdn.net/article/details/102728604 所有示例
         Product product = new Product("bk-2", "City bike", 123.0);
         IndexRequest<Product> a1 = IndexRequest.of(a -> a.index("a")
                 .id("2")
@@ -472,12 +473,33 @@ class ESTest1 {
 //        elasticsearchClient.indices().putMapping(p->p.index("a7").properties("max_result_window", Property.of(o -> o.long_(LongNumberProperty.of(sa -> sa.nullValue(30000L))))));
     }
 
+    //https://elasticstack.blog.csdn.net/article/details/125253886
     @Test
     void updatebyquery() throws IOException {
-        Query id = TermQuery.of(o -> o.field("_id").value(v -> v.stringValue("1")))._toQuery();
+//        Query id = TermQuery.of(o -> o.field("_id").value(v -> v.stringValue("1")))._toQuery();
 //        Query query = new TermsQuery.Builder().build().field("_id")._toQuery();
+      /*  .query(q -> q
+                .match( m -> m
+                        .field("id")
+                        .query("prod1")
+                )
+        )
+                .script(s -> s.inline( src -> src
+                        .lang("painless")
+                        .source("ctx._source['price'] = 50")
+                ))
+                .build();*/
+        String searchText="City bike";
+        Query query = MatchQuery.of(m -> m
+                .field("name")
+                .query(searchText)
+        )._toQuery();
         UpdateByQueryRequest build = new UpdateByQueryRequest.Builder().index("a")
-                .query(id)
+//                .query(id)
+//                .query(q->q.match(m->m.field("name").query("City bike")))//可行
+                .query(q->q.match(m->m.field("sku").query("bk-1")))
+//                .query(query) 可行
+                .script(s->s.inline(src->src.lang("painless").source("ctx._source['price'] = 56")))
 //                .script(s->s.inline(i->i.options("key","if(ctx.sku=='bk-1'){ctx.name='bk-1bk-1bk-1'}")))
 //                .script(s->s.inline(i->i.source("inline")))
                 .build();
@@ -529,6 +551,7 @@ class ESTest1 {
     }
 
     //https://blog.csdn.net/qq_24473507/article/details/126525835
+    //https://elasticstack.blog.csdn.net/article/details/127087465
     @Test
     void scroll() throws IOException {
         List<SortOptions> sorts = new ArrayList<>();
@@ -545,6 +568,8 @@ class ESTest1 {
                         //高亮查询
                         .query(q -> q.match(m -> m.field("name").query("City bike")))
                         .scroll(t -> t.time("5s"))
+//                        .scroll(Time.of(t -> t.time("2m")))
+//                        .timeout(String.valueOf(Time.of(t->t.time("2m"))))
                 , Product.class);
         StringBuffer scrollId = new StringBuffer(search.scrollId());
         //循环查询，直到查不到数据
@@ -585,5 +610,13 @@ class ESTest1 {
             System.out.println(highlight);
             System.out.println("bbbb:" + hit.source());
         }
+    }
+    @Test
+    public void field_caps() throws IOException {
+//        GET twitter/_field_caps?fields=country
+//        FieldCapsResponse fieldCapsResponse = elasticsearchClient.fieldCaps(FieldCapsRequest.of(f -> f.index("twitter").fields("country")));
+        FieldCapsRequest build = new FieldCapsRequest.Builder().index("twitter").fields("country").build();
+        elasticsearchClient.fieldCaps(build);
+//        System.out.println(fieldCapsResponse);
     }
 }
