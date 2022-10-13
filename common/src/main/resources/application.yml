@@ -10,4 +10,4 @@ elasticsearch:
   passwd: 123456
   apikey: YWtvcVpJTUJFX29pcEVmZGVpamM6NEVtcF9iS1FSVHlYRm45VVBQVlc5dw==
   # 多个IP逗号隔开
-  hosts: 192.168.56.213:9200
+  hosts: 192.168.56.211:9200
