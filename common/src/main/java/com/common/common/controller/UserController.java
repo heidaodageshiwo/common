@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.common.common.entity.User;
 import com.common.common.mapper.UserMapper;
 import com.common.common.service.UserService;
-import com.sun.javafx.collections.MappingChange.Map;
+
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -108,5 +110,14 @@ public class UserController {
     List<User> userList = userService.list();
     userList.forEach(System.out::println);
     return userList;
+  }
+
+  @RequestMapping("/selectscript")
+  public List<Map<String, Object>> selectscript() {
+    int pageIndex=0;
+    int pageSize=10;
+    pageIndex=(pageIndex-1)*pageSize;
+    List<Map<String, Object>> allMapss = userMapper.getAllMapss("", pageIndex, pageSize);
+    return allMapss;
   }
 }
