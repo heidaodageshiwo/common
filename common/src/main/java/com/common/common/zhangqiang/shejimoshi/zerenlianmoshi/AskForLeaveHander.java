@@ -1,4 +1,4 @@
-package com.common.common.zhangqiang.zerenlianmoshi;
+package com.common.common.zhangqiang.shejimoshi.zerenlianmoshi;
 
 public interface AskForLeaveHander
 
