@@ -33,7 +33,7 @@ public interface UserMapper extends BaseMapper<User> {
   List<Map<String,Object>> getAllMap();
   @Select("<script>" +
           " select * from table " +
-          " if <test=\"iccid !=null and iccid !=''\"> and iccid=${iccid}</if> " +
+          " <if test=\"iccid !=null and iccid !=''\"> and iccid=${iccid}</if> " +
           " limit #{pageIndex},#{pageSize}" +
           "</script>")
   List<Map<String,Object>> getAllMapss(
@@ -42,7 +42,7 @@ public interface UserMapper extends BaseMapper<User> {
           ,@Param("pageSize") Integer pageSize);
   @Select("<script>" +
           " select count(*) from table " +
-          " if <test=\"iccid !=null and iccid !=''\"> and iccid=${iccid}</if> " +
+          " <if test=\"iccid !=null and iccid !=''\"> and iccid=${iccid}</if> " +
           "</script>")
   List<Map<String,Object>> getAllMapsscount(
           @Param("iccid")String iccid);
