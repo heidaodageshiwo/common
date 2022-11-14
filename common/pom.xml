@@ -102,6 +102,29 @@
       <version>30.0-jre</version>
     </dependency>
 
+
+
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>4.9.0</version>
+    </dependency>
+<!--
+    ————————————————
+    版权声明：本文为CSDN博主「Touch&amp;」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+    原文链接：https://blog.csdn.net/BThinker/article/details/125412751-->
+    <dependency>
+      <groupId>io.minio</groupId>
+      <artifactId>minio</artifactId>
+      <version>8.4.5</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>okhttp</artifactId>
+          <groupId>com.squareup.okhttp3</groupId>
+        </exclusion>
+      </exclusions>
+
+    </dependency>
   </dependencies>
 
   <build>
