@@ -43,7 +43,7 @@ public class UserControllerVue {
         //方式二
         long l2=rd.nextInt(9000)+1000;
       }
-      user.setId((long) (rd.nextInt(9000)+1000));
+      user.setId((long) (rd.nextInt(90000)+10000));
 
       int insert = userMapper.insert(user);
     }else{
@@ -62,12 +62,16 @@ public class UserControllerVue {
     String id = session.getId();
     try {
       QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-      QueryWrapper<User> eq = userQueryWrapper.eq("name", user.getName());
-      User user1 = userMapper.selectOne(eq);
+       userQueryWrapper.eq("name", user.getName());
+       userQueryWrapper.eq("password", user.getPassword());
+      User user1 = userMapper.selectOne(userQueryWrapper);
       if (null!=user1) {
         map.put("success",true);
         map.put("token",id);
 //        mpas.put("token",)
+//        UpdateWrapper<User> objectUpdateWrapper = new UpdateWrapper<>();
+        user1.setToken(id);
+        userMapper.updateById(user1);
         return map;
       }else {
         map.put("success",false);
@@ -96,7 +100,8 @@ public class UserControllerVue {
   public User token(String token) {
     System.out.println("=============="+token);
     QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
-    QueryWrapper<User> eq = userQueryWrapper.eq("id", "4");
+//    QueryWrapper<User> eq = userQueryWrapper.eq("id", "4");
+    QueryWrapper<User> eq = userQueryWrapper.eq("token", token);
     return userMapper.selectOne(eq);
   }
 
