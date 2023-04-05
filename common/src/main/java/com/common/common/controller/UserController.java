@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @UpdateUser: zhangq
  * @UpdateDate: 2021-11-18 14:05
  * @UpdateRemark: The modified content
- * @Version: 1.0 *
+ * @Version: 1.0 *a
  */
 @RestController
 public class UserController {
